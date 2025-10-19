@@ -86,7 +86,6 @@ namespace BusinessLogic.Services
             if (workout.UserId != userId)
                 return "You have no rights to edit this workout.";
 
-
             _mapper.Map(dto, workout);
 
             _unitOfWork.Workouts.Update(workout);
