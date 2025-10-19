@@ -100,19 +100,24 @@ namespace Back_WorkoutTracket
 			if (args.Length == 1 && args[0].ToLower() == "seeddata")
 				SeedData(app);
 
-			void SeedData(IHost app)
-			{
-				var scopedFactory = app.Services.GetService<IServiceScopeFactory>();
+            async Task SeedData(IHost app)
+            {
+                var scopedFactory = app.Services.GetService<IServiceScopeFactory>();
+                using (var scope = scopedFactory.CreateScope())
+                {
+                    // Отримуємо всі необхідні сервіси
+                    var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+                    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+                    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>(); // <-- Отримуємо RoleManager
 
-				using (var scope = scopedFactory.CreateScope())
-				{
-					var service = scope.ServiceProvider.GetService<Seed>();
-					service.SeedDataContext();
-				}
-			}
+                    // Передаємо всі залежності в конструктор Seed
+                    var seeder = new Seed(context, userManager, roleManager);
+                    await seeder.SeedDataContextAsync();
+                }
+            }
 
-			// Configure the HTTP request pipeline.
-			if (app.Environment.IsDevelopment())
+            // Configure the HTTP request pipeline.
+            if (app.Environment.IsDevelopment())
 			{
 				app.UseSwagger();
 				app.UseSwaggerUI();

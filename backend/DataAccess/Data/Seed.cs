@@ -1,5 +1,7 @@
 ﻿using DataAccess.Data;
 using DataAccess.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,21 +10,39 @@ namespace DataAccess.Data
     public class Seed
     {
         private readonly DataContext _dataContext;
+        private readonly UserManager<User> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public Seed(DataContext context)
+        public Seed(DataContext context, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
             _dataContext = context;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
-        public void SeedDataContext()
+        public async Task SeedDataContextAsync()
         {
-            // Якщо в базі вже є шаблони або вправи, нічого не робимо
+            if (await _roleManager.Roles.AnyAsync())
+            {
+                return;
+            }
+
+            var roles = new List<IdentityRole>
+            {
+                new IdentityRole {Name = "Admin"},
+                new IdentityRole {Name = "User"}
+            };
+
+            foreach (var role in roles)
+            {
+                await _roleManager.CreateAsync(role);
+            }
+
             if (_dataContext.WorkoutTemplates.Any() || _dataContext.ExerciseTypes.Any())
             {
                 return;
             }
 
-            // --- 1. Створюємо вичерпний довідник вправ з усіма полями ---
             #region Exercise Types Creation
             // Legs
             var squat = new ExerciseType() { Name = "Barbell Squat", MuscleGroup = "Legs", Description = "A fundamental compound exercise for lower body." };
@@ -69,7 +89,6 @@ namespace DataAccess.Data
                 bicepCurl, tricepExtension, hammerCurls, tricepDips, preacherCurls
             );
 
-            // --- 2. Створюємо шаблони тренувань ---
             var templates = new List<WorkoutTemplate>
             {
                 new() { Name = "Full Body", Description = "A workout for the entire body.", TemplateExercises = new List<WorkoutTemplateExercise> { new() { ExerciseType = squat }, new() { ExerciseType = benchPress }, new() { ExerciseType = bentOverRow }, new() { ExerciseType = overheadPress }, new() { ExerciseType = bicepCurl } } },
@@ -87,8 +106,15 @@ namespace DataAccess.Data
             };
             _dataContext.WorkoutTemplates.AddRange(templates);
 
-            // --- 3. Зберігаємо всі зміни ---
-            _dataContext.SaveChanges();
+            var adminUser = new User { UserName = "AdminUser", Email = "admin@example.com" };
+            await _userManager.CreateAsync(adminUser, "AdminPa$$w0rd");
+            await _userManager.AddToRoleAsync(adminUser, "Admin");
+
+            var regularUser = new User { UserName = "RegularUser", Email = "user@example.com" };
+            await _userManager.CreateAsync(regularUser, "UserPa$$w0rd");
+            await _userManager.AddToRoleAsync(regularUser, "User");
+
+            await _dataContext.SaveChangesAsync();
         }
     }
 }

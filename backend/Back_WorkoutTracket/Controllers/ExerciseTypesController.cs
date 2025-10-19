@@ -2,6 +2,7 @@
 using BusinessLogic.Helper;
 using BusinessLogic.Interfaces;
 using DataAccess.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
@@ -9,6 +10,7 @@ namespace Back_WorkoutTracket.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
+
 	public class ExerciseTypesController : Controller
 	{
 		private readonly IExerciseTypeService _exerciseTypeService;
@@ -34,7 +36,8 @@ namespace Back_WorkoutTracket.Controllers
 		}
 
 		[HttpPost]
-		[ProducesResponseType(204)]
+        [Authorize(Roles = "Admin")]
+        [ProducesResponseType(204)]
 		[ProducesResponseType(400)]
 		public async Task<IActionResult> Create([FromBody] CreateAndUpdateExerciseTypeDto exerciseTypeDto)
 		{
@@ -61,7 +64,8 @@ namespace Back_WorkoutTracket.Controllers
 		}
 
 		[HttpPut("{exId}")]
-		[ProducesResponseType(204)]
+        [Authorize(Roles = "Admin")]
+        [ProducesResponseType(204)]
 		[ProducesResponseType(400)]
 		[ProducesResponseType(404)]
 		public async Task<IActionResult> Update(int exId , [FromBody] CreateAndUpdateExerciseTypeDto dto)
@@ -75,7 +79,8 @@ namespace Back_WorkoutTracket.Controllers
 		}
 
 		[HttpDelete("{exId}")]
-		[ProducesResponseType(400)]
+        [Authorize(Roles = "Admin")]
+        [ProducesResponseType(400)]
 		[ProducesResponseType(204)]
 		[ProducesResponseType(404)]
 		public async Task<IActionResult> Delete(int exId)
