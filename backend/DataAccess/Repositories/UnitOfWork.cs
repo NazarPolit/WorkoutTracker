@@ -17,6 +17,7 @@ namespace DataAccess.Repositories
 		public IWorkoutRepository Workouts { get; private set; }
 		public IWorkoutExerciseRepository WorkoutExercises { get; private set; }
 		public ISetRepository Sets { get; private set; }
+		public IStatsRepository Stats { get; private set; }
 
 		public UnitOfWork(DataContext context)
         {
@@ -26,6 +27,7 @@ namespace DataAccess.Repositories
 			Workouts = new WorkoutRepository(_context);
 			WorkoutExercises = new WorkoutExerciseRepository(_context);
 			Sets = new SetRepository(_context);
+			Stats = new StatsRepository(_context);
 
 		}
 

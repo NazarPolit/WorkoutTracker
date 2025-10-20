@@ -34,6 +34,7 @@ namespace Back_WorkoutTracket
 			builder.Services.AddScoped<IWorkoutService, WorkoutService>();
 			builder.Services.AddScoped<IWorkoutExerciseService, WorkoutExerciseService>();
 			builder.Services.AddScoped<ISetService, SetService>();
+			builder.Services.AddScoped<IStatsService,  StatsService>();	
 
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen(options =>

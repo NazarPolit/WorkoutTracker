@@ -13,6 +13,7 @@ namespace DataAccess.Interfaces
 		IWorkoutRepository Workouts { get; }
 		IWorkoutExerciseRepository WorkoutExercises { get; }
 		ISetRepository Sets { get; }
+		IStatsRepository Stats { get; }
 
 		Task<int> CompleteAsync();
 	}
