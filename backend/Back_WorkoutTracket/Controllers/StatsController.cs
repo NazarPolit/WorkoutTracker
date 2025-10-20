@@ -40,5 +40,22 @@ namespace Back_WorkoutTracket.Controllers
             }
             return Ok(record);
         }
+
+        [HttpGet("volume-history/{exerciseTypeId}")]
+        public async Task<IActionResult> GetVolumeHistory(int exerciseTypeId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            var history = await _statsService.GetUserVolumeHistoryAsync(userId, exerciseTypeId);
+            if (history == null)
+            {
+                return NotFound(new { message = "Exercise type not found." });
+            }
+            return Ok(history);
+        }
     }
 }

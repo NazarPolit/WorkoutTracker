@@ -36,5 +36,10 @@ namespace BusinessLogic.Services
                 MaxWeigth = maxWeigth
             };
         }
+
+        public async Task<List<VolumeHistoryData>> GetUserVolumeHistoryAsync(string userId, int exerciseTypeId)
+        {
+            return await _unitOfWork.Stats.GetVolumeHistoryAsync(userId, exerciseTypeId);
+        }
     }
 }
