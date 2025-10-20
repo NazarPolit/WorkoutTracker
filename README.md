@@ -84,9 +84,5 @@ This repository contains the backend API for a workout tracker application. It a
 * **`Workouts`**: CRUD operations for user workout logs.
 * **`WorkoutExercises`**: Operations to add/remove exercises within a workout log.
 * **`Sets`**: CRUD operations for sets within a workout exercise.
-* **`Admin`**: (Optional) Endpoints for managing user roles.
+* **`Admin`**: Endpoints for managing user roles.
 * **`Stats`**: (Optional) Endpoints for retrieving workout statistics.
-
----
-
-*(Optional: Add sections about future plans, contribution guidelines, or contact information.)*
