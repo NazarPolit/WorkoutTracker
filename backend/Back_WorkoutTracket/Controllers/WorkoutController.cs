@@ -23,7 +23,8 @@ namespace Back_WorkoutTracket.Controllers
 		}
 
 		[HttpGet]
-		[ProducesResponseType(200, Type = typeof(IEnumerable<WorkoutDto>))]
+        [Authorize(Roles = "User")]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<WorkoutDto>))]
 		public async Task<IActionResult> GetWorkoutsForUser(
 			[FromQuery] PaginationParams paginationParams, 
 			[FromQuery] DateTime? startDate,
@@ -69,7 +70,8 @@ namespace Back_WorkoutTracket.Controllers
 
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-			if (userId == null) return Unauthorized();
+			if (userId == null) 
+				return Unauthorized();
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

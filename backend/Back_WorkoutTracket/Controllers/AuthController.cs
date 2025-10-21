@@ -43,6 +43,8 @@ namespace Back_WorkoutTracket.Controllers
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
 
+            await _userManager.AddToRoleAsync(user, "User");
+
             return Ok(new {message = "User successfully created."});
 
         }
